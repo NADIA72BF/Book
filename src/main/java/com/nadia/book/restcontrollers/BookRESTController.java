@@ -1,5 +1,11 @@
 package com.nadia.book.restcontrollers;
 
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+
 import com.nadia.book.entities.books;
 import com.nadia.book.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,35 +15,45 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:4200")
 public class BookRESTController {
     @Autowired
     BookService bookService ;
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(path="all" ,method = RequestMethod.GET)
     public List<books> getAllBooks (){
         return bookService.getAllBooks();
     }
-    @RequestMapping(value="/{id}",method = RequestMethod.GET)
+    @RequestMapping(value="/getbyid/{id}",method = RequestMethod.GET)
+    //@GetMapping("/getbyid/{id}")
     public books getBookById(@PathVariable("id") Long id) {
         return bookService.getBook(id);
     }
 
-    @RequestMapping(method = RequestMethod.POST)
+    //@RequestMapping(value="/addprod" ,method = RequestMethod.POST)
+    @PostMapping("/addbook")
+
     public books createBook(@RequestBody books book) {
         return bookService.saveBook(book);
     }
-    @RequestMapping(method = RequestMethod.PUT)
+    //@RequestMapping(value="/updateprod" ,method = RequestMethod.PUT)
+    @PutMapping("/updatebook")
+    @PreAuthorize("hasAuthority('ADMIN')")
     public books updateBook(@RequestBody books book) {
         return bookService.updateBook(book);
     }
-    @RequestMapping(value="/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value="/delbook/{id}",method = RequestMethod.DELETE)
+    @DeleteMapping("/delprod/{id}" )
     public void deleteBook(@PathVariable("id") Long id)
     {
         bookService.deleteBookById( id);
     }
-    @RequestMapping(value="/BookType/{idCat}",method = RequestMethod.GET)
-    public List<books> getBookByTypeId(@PathVariable("idCat") Long idCat) {
-        return bookService.findByTypeIdT(idCat);
+    @RequestMapping(value="/bookType/{idT}",method = RequestMethod.GET)
+    public List<books> getBookByTypeId(@PathVariable("idT") Long idT) {
+        return bookService.findByTypeIdT(idT);
+    }
+    @RequestMapping(value="/booksByName/{nom}",method = RequestMethod.GET)
+    public List<books> findByNomBookContains(@PathVariable("nom") String nom) {
+        return bookService.findByNomBookContains(nom);
     }
 
 }

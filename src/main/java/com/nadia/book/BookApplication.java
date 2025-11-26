@@ -1,5 +1,6 @@
 package com.nadia.book;
 
+import com.nadia.book.entities.Type;
 import com.nadia.book.entities.books;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,6 +23,6 @@ public class BookApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        repositoryRestConfiguration.exposeIdsFor(books.class);
+        repositoryRestConfiguration.exposeIdsFor(books.class, Type.class);
     }
 }

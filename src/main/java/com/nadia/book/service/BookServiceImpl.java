@@ -3,6 +3,7 @@ import com.nadia.book.entities.Type;
 import com.nadia.book.entities.books;
 import com.nadia.book.repos.BookRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,6 +14,8 @@ import java.util.List;
 public class BookServiceImpl implements BookService {
     @Autowired
     BookRepository bookRepository;
+
+    //@PreAuthorize("hasAuthority('ADMIN')")
     @Override
     public books saveBook(books b) {
         return bookRepository.save(b);
@@ -62,6 +65,7 @@ public class BookServiceImpl implements BookService {
     public List<books> findByType(Type type) {
         return bookRepository.findByType(type);
     }
+
 
     @Override
     public List<books> findByTypeIdT(Long id) {
